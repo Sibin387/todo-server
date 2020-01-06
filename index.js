@@ -1,5 +1,5 @@
 const express = require('express');
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
 
 const todo = require('./todo/todo');
 
@@ -9,24 +9,31 @@ app.use(bodyParser.json());
 const port = 3000;
 
 app.get('/', function(req,res){
-    const todos = todo.getTodo();
-    res.json(todos);
+    todo.getTodo()
+    .then(todos=>{
+        res.json(todos);
+    })
 })
 
 app.post('/create', function(req,res){
-    const todos = todo.addTodo(req.body);
-    res.json(todos);
+    todo.addTodo(req.body)
+    .then(data=>{
+        res.json(data);
+    });
 })
 
 app.put('/edit/:id', function(req,res){
-    const todos = todo.editTodo(req.params.id,req.body.name,req.body.description);
-    res.json(todos);
+    todo.editTodo(req.params.id,req.body.name,req.body.description)
+    .then(data=>{
+        res.json(data);
+    })
 })
 
 app.delete('/delete/:id', function(req,res){
     const id = req.params.id;
-    const todos = todo.deleteTodo(id);
-    res.json(todos);
+    todo.deleteTodo(id).then(data=>{
+        res.json(data);
+    });
 })
 
 app.listen(port, function(){
