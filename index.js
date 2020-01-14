@@ -1,10 +1,27 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const todo = require('./todo/todo');
 
 const app = express();
+
+app.use(cors());
+
 app.use(bodyParser.json());
+
+var myLogger1 = function (req, res, next) {
+    console.log("myLogger1",req.body);
+    next()
+}
+var myLogger2 = function (req, res, next) {
+    console.log("myLogger2",req.body);
+    next()
+}
+app.use(myLogger1);
+app.use(myLogger2);
+
+
 
 const port = 3000;
 
@@ -34,6 +51,11 @@ app.delete('/delete/:id', function(req,res){
     todo.deleteTodo(id).then(data=>{
         res.json(data);
     });
+})
+
+app.get('/todo/:id',function(req,res){
+    todo.getTodoById(req.params.id)
+    .then(data=>res.json(data));
 })
 
 app.listen(port, function(){
