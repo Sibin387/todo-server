@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 const todo = require('./todo/todo');
+const user = require('./user');
 
 const app = express();
 
@@ -38,7 +39,12 @@ app.post('/create', function(req,res){
         res.json(data);
     });
 })
-
+app.post('/register', function(req,res){
+    user.createUser(req.body)
+    .then(data=>{
+        res.json(data);
+    });
+})
 app.put('/edit/:id', function(req,res){
     todo.editTodo(req.params.id,req.body.name,req.body.description)
     .then(data=>{
