@@ -40,10 +40,16 @@ app.post('/create', function(req,res){
     });
 })
 app.post('/register', function(req,res){
-    user.createUser(req.body)
+    user.checkUserExists(req.body.email)
     .then(data=>{
-        res.json(data);
-    });
+        if(data){
+            return res.status(422).json({message:"User already exists"});
+        }
+        user.createUser(req.body)
+        .then(data=>{
+            res.json(data);
+        });
+    })
 })
 app.put('/edit/:id', function(req,res){
     todo.editTodo(req.params.id,req.body.name,req.body.description)
